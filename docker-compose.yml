@@ -1,0 +1,68 @@
+services:
+  server1:
+    image: server1
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: ${SERVER_HOST_1}
+    restart: always
+    ports:
+      - ${SERVER_PORT_1}:${SERVER_PORT_1}
+    environment:
+      SERVER_HOST: ${SERVER_HOST_1}
+      SERVER_POST: ${SERVER_PORT_1}
+    volumes:
+      - ./server:/server
+      - server-v-node-modules:/server/node_modules
+
+  server2:
+    image: server1
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: ${SERVER_HOST_2}
+    restart: always
+    ports:
+      - ${SERVER_PORT_2}:${SERVER_PORT_2}
+    environment:
+      SERVER_HOST: ${SERVER_HOST_2}
+      SERVER_POST: ${SERVER_PORT_2}
+    volumes:
+      - ./server:/server
+      - server-v-node-modules:/server/node_modules
+
+  server3:
+    image: server1
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: ${SERVER_HOST_3}
+    restart: always
+    ports:
+      - ${SERVER_PORT_1}:${SERVER_PORT_3}
+    environment:
+      SERVER_HOST: ${SERVER_HOST_3}
+      SERVER_POST: ${SERVER_PORT_3}
+    volumes:
+      - ./server:/server
+      - server-v-node-modules:/server/node_modules
+
+  reverse-proxy:
+    image: reverse-proxy
+    build:
+      context: ./reverse-proxy
+      dockerfile: Dockerfile
+    restart: always
+    env_file: .env
+    ports:
+      - ${NGINX_PORT}:${NGINX_PORT}
+    volumes:
+      - ./reverse-proxy/default.conf.template:/etc/nginx/templates/default.conf.template
+    depends_on:
+      - server1
+      - server2
+      - server3
+
+volumes:
+  server-v-node-modules:
+    name: "server-v-node-modules"
