@@ -1,9 +1,6 @@
 FROM node:20-alpine
-
 WORKDIR /server
+COPY package*.json .
+RUN npm i
 
-COPY package.json .
-
-RUN npm install
-
-CMD [ "npm","start" ]
+CMD [ "npm", "start" ]
