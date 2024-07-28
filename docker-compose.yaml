@@ -12,6 +12,7 @@ services:
     environment:
       SERVER_HOST: ${SERVER_HOST_1}
       SERVER_PORT: ${SERVER_PORT_1}
+      MONGOURL: https://mongodb:27017/dockerizedmern
     volumes:
       - ./server:/server
       - server-v-node-modules:/server/node_modules
@@ -26,6 +27,7 @@ services:
     environment:
       SERVER_HOST: ${SERVER_HOST_2}
       SERVER_PORT: ${SERVER_PORT_2}
+      MONGOURL: https://mongodb:27017/dockerizedmern
     ports:
       - ${SERVER_PORT_2}:${SERVER_PORT_2}
     volumes:
@@ -42,6 +44,7 @@ services:
     environment:
       SERVER_HOST: ${SERVER_HOST_3}
       SERVER_PORT: ${SERVER_PORT_3}
+      MONGOURL: https://mongodb:27017/dockerizedmern
     ports:
       - ${SERVER_PORT_3}:${SERVER_PORT_3}
     volumes:
@@ -64,7 +67,29 @@ services:
       - server1
       - server2
       - server3
+      - frontend
+
+  frontend:
+    image: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - 3000:80
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
 
 volumes:
   server-v-node-modules:
     name: "server-v-node-modules"
+  mongo-data:
+    name: "mongo-data"

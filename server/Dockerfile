@@ -4,3 +4,4 @@ COPY package*.json .
 RUN npm i
 RUN npm i -g nodemon
 CMD [ "npm", "start" ]
+
