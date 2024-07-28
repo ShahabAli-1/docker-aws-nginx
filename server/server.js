@@ -10,7 +10,7 @@ async function main() {
     await mongoose
       .connect(MONGOURL)
       .then(() => console.log("Connected to MongoDB."))
-      .catch((err) => console.log("Error connecting to DB."));
+      .catch((err) => console.log("Error connecting to DB......"));
     server.on("request", async (req, res) => {
       res.end(JSON.stringify({ SERVER_HOST, SERVER_PORT }));
     });
